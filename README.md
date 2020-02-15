@@ -11,6 +11,7 @@ Getting (messurement) values from a smart meter and POST them to a HTTPS-Rest-AP
 
 ![reading data](pics/data_read.jpg)
 
+![meter installation](pics/meter_case_IR-Head.jpg)
 
 ## program sequence
 1. connect to wifi
