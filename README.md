@@ -9,9 +9,7 @@ Getting (messurement) values from a smart meter and POST them to a HTTPS-Rest-AP
 3. ESP32 board with usable UART2 and (OLED-)display with i2c (e.g. SSD1306)
 4. Micropython Firmware v1.12 for ESP32 (http://micropython.org/download)
 
-![reading data](pics/data_read.jpg)
-
-![meter installation](pics/meter_case_IR-Head.jpg)
+![reading data](pics/data_read.jpg) ![meter installation](pics/meter_case_IR-Head.jpg)
 
 ## program sequence
 1. connect to wifi
@@ -21,8 +19,7 @@ Getting (messurement) values from a smart meter and POST them to a HTTPS-Rest-AP
 5. push them by HTTPS request (POST)
 6. goto 2
 
-
-
-## instructions
-
+## instructions for Wemos Lolin32 OLED
+- onboard OLED-display I2C pins: scl=Pin(4), sda=Pin(5)
+- UART2 pins: rx=13, tx=15 (only rx is used, due to the unidirectional interface of the meter)
 
