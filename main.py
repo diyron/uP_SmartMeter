@@ -51,6 +51,7 @@ def https_post(url, kw_dict):
     sock.write(b"\r\n")
     sock.write(data)
 
+
     #response
     #print("socket:", sock)
     resp = sock.readline()
