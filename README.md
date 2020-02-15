@@ -9,7 +9,7 @@ Getting (messurement) values from a smart meter and POST them to a HTTPS-Rest-AP
 3. ESP32 board with usable UART2 and (OLED-)display with i2c (e.g. SSD1306)
 4. Micropython Firmware v1.12 for ESP32 (http://micropython.org/download)
 
-![reading data](/pics/data_read.jpg)
+![reading data](pics/data_read.jpg)
 
 
 ## program sequence
@@ -21,4 +21,7 @@ Getting (messurement) values from a smart meter and POST them to a HTTPS-Rest-AP
 6. goto 2
 
 
+
 ## instructions
+
+
