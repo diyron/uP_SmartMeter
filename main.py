@@ -12,7 +12,7 @@ import network
 i2c = I2C(scl=Pin(4), sda=Pin(5))
 oled = ssd1306.SSD1306_I2C(128, 64, i2c)
 wifi_client = network.WLAN(network.STA_IF)  # creare client interface
-onbled = Pin(2, Pin.OUT)
+onbled = Pin(2, Pin.OUT)  # onboard led (blue)
 uart = UART(2, 9600)
 uart.init(9600, bits=8, parity=None, stop=1, timeout=100, timeout_char=100, rx=13, tx=15)  # init with given parameters
 #application
@@ -21,7 +21,8 @@ wifi_ssid = "CookieDough"
 wifi_pw = "Gaeste2049"
 push_int = 10  # Sekunden
 buf = bytearray(500)
-#Thingsboard API
+t = ""
+#Thingsboard HTTP API
 access_token = "XIM3UEFj7w9u0f9Mhl1f"  # Thingsboard device token
 raw_url = "https://tb.exceeding-solutions.de/api/v1/"
 url_tb = raw_url + access_token + "/telemetry"
@@ -38,31 +39,28 @@ def https_post(url, kw_dict):
     ai = usocket.getaddrinfo(host, port, 0, usocket.SOCK_STREAM)
     ai = ai[0]
 
-    s = usocket.socket(ai[0], ai[1], ai[2])
-    s.connect(ai[-1])
+    sock = usocket.socket(ai[0], ai[1], ai[2])
+    sock.connect(ai[-1])
 
-    oled.text('wrapping SSL...', 0, 30)
-    oled.show()
+    sock = ussl.wrap_socket(sock, server_hostname=host)
 
-    s = ussl.wrap_socket(s, server_hostname=host)
-
-    s.write(b"%s /%s HTTP/1.1\r\n" % (method, path))
-    s.write(b"Host: %s\r\n" % host)
-    s.write(b"Content-Type: application/json\r\n")
-    s.write(b"Content-Length: %d\r\n" % len(data))
-    s.write(b"\r\n")
-    s.write(data)
+    sock.write(b"%s /%s HTTP/1.1\r\n" % (method, path))
+    sock.write(b"Host: %s\r\n" % host)
+    sock.write(b"Content-Type: application/json\r\n")
+    sock.write(b"Content-Length: %d\r\n" % len(data))
+    sock.write(b"\r\n")
+    sock.write(data)
 
     #response
-    #print("socket:", s)
-    resp = s.readline()
+    #print("socket:", sock)
+    resp = sock.readline()
     resp = resp.split(None, 2)
     status = int(resp[1])
     reason = "no reason"
     if len(resp) > 2:
         reason = resp[2].rstrip()
     while True:
-        resp = s.readline()
+        resp = sock.readline()
         if not resp or resp == b"\r\n":
             break
         if resp.startswith(b"Transfer-Encoding:"):
@@ -71,7 +69,7 @@ def https_post(url, kw_dict):
         elif resp.startswith(b"Location:") and not 200 <= status <= 299:
             raise NotImplementedError("Redirects not yet supported")
 
-    s.close()
+    sock.close()
 
     return status, reason
 
@@ -94,12 +92,12 @@ def read_meter_data_uart():
     oled.fill(0)
     oled.text(res["devid"], 0, 0)
     oled.framebuf.hline(0, 12, 128, 1)
-    oled.text("A+", 0, 15)
-    oled.text(res["1.8.0_Wh"], 35, 15)
-    oled.text("Wh", 110, 15)
-    oled.text("P:", 0, 30)
-    oled.text(res["16.7.0_W"], 35, 30)
-    oled.text("W", 110, 30)
+    oled.text("A+", 0, 16)
+    oled.text(res["1.8.0_Wh"], 35, 16)
+    oled.text("Wh", 110, 16)
+    oled.text("P:", 0, 31)
+    oled.text(res["16.7.0_W"], 35, 32)
+    oled.text("W", 110, 32)
     oled.framebuf.hline(0, 48, 128, 1)
     oled.show()
 
@@ -125,7 +123,7 @@ def bootpage():
             oled.pixel(x+93, y+23, c)
 
     oled.text('IoT with ', 20, 25)
-    oled.text('Smart Meter v0.1', 0, 50)
+    oled.text('Smart Meter v0.2', 0, 50)
     oled.show()
 
 #############################################################
@@ -152,12 +150,16 @@ while True:
 
     if wifi_client.isconnected():
         onbled.on()  # on
-        r = read_meter_data_uart()
-        ret = https_post(url=url_tb, kw_dict=r)  # 2nd Argument must be a dictionary
+        data = read_meter_data_uart()
+        s, r = https_post(url=url_tb, kw_dict=data)  # 2nd Argument must be a dictionary
         onbled.off()  # off
-        oled.text('POST done...', 0, 45)
+        if s == 200:  # http status code 200 - OK
+            t = "POST done..."
+        else:
+            t = "POST failed"
     else:
-        oled.text('no wifi', 0, 45)
+        t = "no wifi"
 
+    oled.text(t, 0, 55)
     oled.show()
 
