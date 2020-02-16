@@ -20,7 +20,19 @@ Getting (messurement) values from a smart meter and POST them to a HTTPS-Rest-AP
 6. goto 2
 
 ## instructions for Wemos Lolin32 OLED
+if you are using a different board, set up the pins corresponding to your system
 ![Pinout Wemos32](pics/Wemos-ESP32-OLED.png)
 - onboard OLED-display I2C pins: scl=Pin(4), sda=Pin(5)
-- UART2 pins: rx=13, tx=15 (only rx is used, due to the unidirectional interface of the meter)
+- UART2 pins: rx=13, tx=15 (only RX of ESP32 is connected to the TX-Pin of the read head, due to the unidirectional interface of the meter) 
+- install Micropython Firmware (e.g. esptool.py)
+- set up your parameters (see below) 
+- copy files (main.py, sml_extr.py, ssd1306.py) to ESP32 filesystems (e.g. rshell)
+- have fun!
+
+## parameters (main.py)
+- nodename - sets the wifi cient name
+- wifi_ssid - wifi ssid to connect to
+- wifi_pw - wifi client password
+- push_int - seconds to wait until next data push
+- url_tb - Webservice API URL (something like https://[URL]/[ACCESS-TOKEN]/[...])
 
