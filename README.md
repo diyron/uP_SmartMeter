@@ -20,6 +20,7 @@ Getting (messurement) values from a smart meter and POST them to a HTTPS-Rest-AP
 6. goto 2
 
 ## instructions for Wemos Lolin32 OLED
+
 - onboard OLED-display I2C pins: scl=Pin(4), sda=Pin(5)
 - UART2 pins: rx=13, tx=15 (only rx is used, due to the unidirectional interface of the meter)
 
