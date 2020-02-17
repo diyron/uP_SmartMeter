@@ -16,15 +16,15 @@ onbled = Pin(2, Pin.OUT)  # onboard led (blue)
 uart = UART(2, 9600)
 uart.init(9600, bits=8, parity=None, stop=1, timeout=100, timeout_char=100, rx=13, tx=15)  # init with given parameters
 #application
-nodename = "1ESY1161426155"
-wifi_ssid = "CookieDough"
-wifi_pw = "Gaeste2049"
+nodename = "mymeter"
+wifi_ssid = "mySSID"
+wifi_pw = "myPassword"
 push_int = 10  # Sekunden
 buf = bytearray(500)
 t = ""
 #Thingsboard HTTP API
-access_token = "XIM3UEFj7w9u0f9Mhl1f"  # Thingsboard device token
-raw_url = "https://tb.exceeding-solutions.de/api/v1/"
+access_token = "TOKEN"  # Thingsboard device token
+raw_url = "https://[YOUR PLATFORM]"
 url_tb = raw_url + access_token + "/telemetry"
 #############################################################
 

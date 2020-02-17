@@ -12,7 +12,7 @@ tested with these electricity meter with infrared interface:
 
  
 ## prerequisite
-1. smart meter with infrared interface and SML (smart message manguage) data output
+1. smart meter with infrared interface and SML (smart message language) data output
 2. infrared read head with TTL/UART output to read SML messages into ESP32 (like this: https://de.elv.com/elv-homematic-energiesensor-fuer-smart-meter-es-iec-komplettbausatz-142148)
 3. ESP32 board with usable UART2 and (OLED-)display with I2C interface (e.g. SSD1306)
 4. Micropython Firmware v1.12 (IDF3) for ESP32 (http://micropython.org/download)
@@ -47,13 +47,13 @@ if you are using a different board, set up the pins corresponding to your system
 - **url_tb** - Webservice API URL (something like **https://[URL]/[ACCESS-TOKEN]/[API-PATH]**)
 
 ## case
-see folder **"case"**, it is designed with FreeCAD, OBJ-file for 3D-printing is also available
+see folder **"case"**, it is designed with FreeCAD (v0.19), OBJ-file for 3D-printing is also available
 
 ![Case2](pics/meter_case_2.jpg) 
 
 ![Case3](pics/meter_case_3.jpg)
  
-you can press some magnets (diameter 8mm, height 3mm) into the blind holes to get the device stuck to the meter cabinet (if it's magnetic).
+you can press some magnets (diameter 8mm, height 3mm) into the blind holes to get the device stuck to the meter cabinet (if it's magnetic),
 fix the case with some rubber band
 
 
