@@ -53,7 +53,6 @@ def ntp_rtc_sync():
 
 
 def https_post(url, kw_dict):
-    global ex_count
     port = 443
     method = "POST"
     status = 0
