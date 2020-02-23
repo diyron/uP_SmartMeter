@@ -1,4 +1,8 @@
-
+########################################################
+# SML extractor
+# by André Lange (2020)
+# https://github.com/diyron/uP_SmartMeter
+########################################################
 
 from binascii import unhexlify
 
@@ -30,6 +34,7 @@ def extract_sml(rawsml: str):
     else:
         meter_data = {"devid": "no device id"}
 
+    # values =================================================
     def conv_value(obis, ident):  # convert value from sml notation to string
         nonlocal rawsml
         k = rawsml.find(obis) + len(obis)

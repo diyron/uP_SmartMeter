@@ -10,8 +10,22 @@ tested with these electricity meter with infrared interface:
 - ISKRA
 - ITRON
 
+software gets these values out of SML message:
+- OBIS 1-0:0.0.9 - meter id
+- OBIS 1.8.0 - total energy A+ [Wh] (meter reading)
+- OBIS 16.7.0 - overall power consumption [W] 
+- OBIS 36.7.0 - power consumption on L1 [W] 
+- OBIS 56.7.0 - power consumption on L2 [W] 
+- OBIS 76.7.0 - power consumption on L3 [W] 
+
+### update (2020-02-23)
+- add exception handling for TLS
+- add NTP time sync for timestamp
+- writes last exception with timestamp to file "crash_logs.txt"
+- add counter for exceptions (experimental)
+
  
-## prerequisite
+## prerequisites
 1. smart meter with infrared interface and SML (smart message language) data output
 2. infrared read head with TTL/UART output to read SML messages into ESP32 (like this: https://de.elv.com/elv-homematic-energiesensor-fuer-smart-meter-es-iec-komplettbausatz-142148)
 3. ESP32 board with usable UART2 and (OLED-)display with I2C interface (e.g. SSD1306)
