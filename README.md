@@ -2,6 +2,8 @@
 ## general
 Micropython project for ESP32-platform, that reads (mesurement) values from a smart meter (SML-protocol) and POST them to a HTTPS-Rest-API (using TLS) via wifi connection.
 
+a version publishing data with MQTT can be found here: https://github.com/diyron/uP_SmartMeter_MQTT
+
 tested with these electricity meter with infrared interface:
 - easymeter Q3A
 - easymeter Q3M
