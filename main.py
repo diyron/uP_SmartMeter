@@ -3,8 +3,8 @@ from binascii import hexlify
 import ssd1306
 from sml_extr import extract_sml
 import ujson
-import usocket
-import ussl
+import socket
+import ssl
 import utime
 import network
 from sys import print_exception
@@ -62,14 +62,16 @@ def https_post(url, kw_dict):
     dataj = ujson.dumps(kw_dict)  # dictionary to json
 
     #request
-    ai = usocket.getaddrinfo(host, port, 0, usocket.SOCK_STREAM)
+    ai = socket.getaddrinfo(host, port, 0, socket.SOCK_STREAM)
     ai = ai[0]
 
-    sock = usocket.socket(ai[0], ai[1], ai[2])
+    sock = socket.socket(ai[0], ai[1], ai[2])
 
     try:
         sock.connect(ai[-1])
-        sock = ussl.wrap_socket(sock, server_hostname=host)
+        sock = ssl.wrap_socket(sock, server_hostname=host, keyfile=None, certfile=None, server_side=False,
+                               cert_reqs=ssl.CERT_NONE, ca_certs=None)
+
         print("WARN: server certificate could NOT be validated! (as validation is not yet implemented)")
 
         sock.write(b"%s /%s HTTP/1.1\r\n" % (method, path))
@@ -80,12 +82,13 @@ def https_post(url, kw_dict):
         sock.write(dataj)
 
         #response
-        #print("socket:", sock)
         resp = sock.readline()
         resp = resp.split(None, 2)
         status = int(resp[1])
+
         if len(resp) > 2:
             reason = resp[2].rstrip()
+
         while True:
             resp = sock.readline()
             if not resp or resp == b"\r\n":
@@ -108,6 +111,8 @@ def https_post(url, kw_dict):
 
 
 def read_meter_data_uart():
+    global buf
+
     oled.fill(0)
     oled.text('meter read...', 0, 0)
     oled.show()
@@ -117,6 +122,7 @@ def read_meter_data_uart():
             uart.readinto(buf)
             uart.readinto(buf)  # double read to occure a timeout and get the startsequence first
             raw_str = str(hexlify(buf))
+
             if raw_str.find("1b1b1b1b") == 2:  # SML start/end sequence
                 break
 
@@ -168,8 +174,6 @@ wifi_client.config(dhcp_hostname=nodename)
 
 onbled.off()  # off
 
-ex_count = 0  # exception counter (experimental)
-
 # main loop
 while True:
     utime.sleep(push_int)  # wait
@@ -181,8 +185,6 @@ while True:
         s, r = https_post(url=url_tb, kw_dict=data)     # 2nd Argument must be a dictionary
         if s == 200:  # http status code 200 - OK
             t = "POST done..."
-        elif s == 0:  # exception during POST
-            ex_count += 1
         else:
             t = "POST err # " + str(s)
         onbled.off()  # off
@@ -196,6 +198,5 @@ while True:
         ntp_rtc_sync()  # sync RTC with NTP-Server
 
     oled.text(t, 0, 55)
-    oled.text(str(ex_count), 105, 55)
     oled.show()
 
